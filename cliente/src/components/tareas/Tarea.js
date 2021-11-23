@@ -1,6 +1,42 @@
-import React from 'react';
+import React, { Fragment, useContext } from 'react';
+import proyectoContext from '../../context/proyectos/proyectoContext'
+import tareaContext from '../../context/tareas/tareaContext'
 
 const Tarea = ({tarea}) => {
+    
+
+    // obtener el state del proyecto
+    const proyectosContext = useContext(proyectoContext)
+    const { proyectoSeleccionado } = proyectosContext
+
+    // obtener el state de la tarea
+    const tareasContext = useContext(tareaContext)
+    const { eliminarTarea, obtenerTareas, guardarTareaActual, actualizarTarea } = tareasContext
+
+
+
+    const tareaEliminar = id => {
+        eliminarTarea(id)
+        obtenerTareas(proyectoSeleccionado.id)
+    }
+
+
+    // Seleccionar la tarea actual
+
+    const seleccionarTarea = tarea => {
+        guardarTareaActual(tarea)
+    }
+
+
+    const cambiarEstado = tarea => {
+        if(tarea.estado){
+            tarea.estado = false;
+        }else{
+            tarea.estado = true;
+        }
+        actualizarTarea(tarea)
+    }
+
     return (  
         <li className="tarea sombra">
             <p>{tarea.nombre}</p>
@@ -12,6 +48,7 @@ const Tarea = ({tarea}) => {
                         <button
                             type="button"
                             className="completo"
+                            onClick={() => cambiarEstado(tarea)}
                         >Completo</button>
                     )
                 :
@@ -19,6 +56,7 @@ const Tarea = ({tarea}) => {
                         <button
                             type="button"
                             className="incompleto"
+                            onClick={() => cambiarEstado(tarea)}
                         >Incompleto</button>
                     )
                 }
@@ -28,10 +66,12 @@ const Tarea = ({tarea}) => {
                 <button
                     type="button"
                     className="btn btn-primario"
+                    onClick={() => seleccionarTarea(tarea)}
                 >Editar</button>
                 <button
                     type="button"
                     className="btn btn-secundario"
+                    onClick={() => tareaEliminar(tarea.id)}
                 >Eliminar</button>
             </div>
         </li>

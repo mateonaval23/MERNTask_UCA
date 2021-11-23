@@ -4,13 +4,15 @@ import {v4 as uuid} from 'uuid'
 import proyectoContext from './proyectoContext'
 import proyectoReducer from './proyectoReducer'
 
+import clienteAxios from '../../config/axios'
 import { 
     FORMULARIO_PROYECTO,
     OBTENER_PROYECTOS,
     AGREGAR_PROYECTO,
     VALIDAR_FORMULARIO,
     PROYECTO_ACTUAL,
-    ELIMINAR_PROYECTO
+    ELIMINAR_PROYECTO,
+    PROYECTO_ERROR
 } from '../../types'
 
 
@@ -22,7 +24,8 @@ const ProyectoState = props => {
         proyectos: [],
         formulario: false,
         errorformulario: false,
-        proyectoSeleccionado: null
+        proyectoSeleccionado: null,
+        mensaje: null
     }
 
     // Dispatch para ejecutar las acciones que van a modificar mis state
@@ -36,26 +39,49 @@ const ProyectoState = props => {
         })
     }
 
-    const obtenerProyectos = () => {
-        const proyectos = [
-            {id: 1, nombre: 'Base de datos'},
-            {id: 2, nombre: 'Diseño de sitio web'},
-            {id: 3, nombre: 'E-Commerce'},
-            {id: 4, nombre: 'Web API'}
-        ];
+    const obtenerProyectos = async () => {
 
-        dispatch({
-            type: OBTENER_PROYECTOS,
-            payload: proyectos
-        })
+        try {
+
+            const resultado = await clienteAxios.get('/api/proyectos')
+            console.log("proyectos", resultado)
+            dispatch({
+                type: OBTENER_PROYECTOS,
+                payload: resultado.data.proyectos
+            })
+        } catch (error) {
+            const alerta = {
+                msg: 'Hubo un error',
+                categoria: 'alerta-error'
+            }
+            dispatch({
+                type: PROYECTO_ERROR,
+                payload: alerta
+            })
+        }
+
     }
 
-    const agregarProyecto = proyecto => {
-        proyecto.id = uuid()
-        dispatch({
-            type: AGREGAR_PROYECTO,
-            payload: proyecto
-        })
+    const agregarProyecto = async proyecto => {
+
+        try {
+            const resultado = await clienteAxios.post('/api/proyectos', proyecto)
+            console.log("resultado proyecto", resultado)
+            dispatch({
+                type: AGREGAR_PROYECTO,
+                payload: resultado.data
+            })
+        } catch (error) {
+            const alerta = {
+                msg: 'Hubo un error',
+                categoria: 'alerta-error'
+            }
+            dispatch({
+                type: PROYECTO_ERROR,
+                payload: alerta
+            })
+
+        }
     }
 
     const mostrarError = () => {
