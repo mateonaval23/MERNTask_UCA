@@ -44,7 +44,7 @@ const ProyectoState = props => {
         try {
 
             const resultado = await clienteAxios.get('/api/proyectos')
-            console.log("proyectos", resultado)
+
             dispatch({
                 type: OBTENER_PROYECTOS,
                 payload: resultado.data.proyectos
@@ -66,7 +66,7 @@ const ProyectoState = props => {
 
         try {
             const resultado = await clienteAxios.post('/api/proyectos', proyecto)
-            console.log("resultado proyecto", resultado)
+
             dispatch({
                 type: AGREGAR_PROYECTO,
                 payload: resultado.data
@@ -91,6 +91,7 @@ const ProyectoState = props => {
     }
 
     const proyectoActual = proyectoId => {
+
         dispatch({
             type: PROYECTO_ACTUAL,
             payload: proyectoId
@@ -98,11 +99,27 @@ const ProyectoState = props => {
     }
 
 
-    const eliminarProyecto = proyectoId =>{
-        dispatch({
-            type: ELIMINAR_PROYECTO,
-            payload: proyectoId
-        })
+    const eliminarProyecto = async proyectoId =>{
+        try {
+            await clienteAxios.delete(`/api/proyectos/${proyectoId}`)
+            dispatch({
+                type: ELIMINAR_PROYECTO,
+                payload: proyectoId
+            })
+
+
+        } catch (error) {
+            const alerta = {
+                msg: 'Hubo un error',
+                categoria: 'alerta-error'
+            }
+            dispatch({
+                type: PROYECTO_ERROR,
+                payload: alerta
+            })
+        }
+
+        
     }
 
 
@@ -113,6 +130,7 @@ const ProyectoState = props => {
                 formulario: state.formulario,
                 errorformulario: state.errorformulario,
                 proyectoSeleccionado: state.proyectoSeleccionado,
+                mensaje: state.mensaje,
                 mostrarFormulario,
                 obtenerProyectos,
                 agregarProyecto,

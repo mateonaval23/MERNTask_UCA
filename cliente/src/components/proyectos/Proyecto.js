@@ -16,6 +16,7 @@ const Proyecto = ({proyecto}) => {
     const { obtenerTareas } = tareasContext
 
     const seleccionarProyecto = id => {
+        
         proyectoActual(id) // Selecciona el proyecto
         obtenerTareas(id) // Seleccionar tareas por proyecto
     }
@@ -25,7 +26,7 @@ const Proyecto = ({proyecto}) => {
             <button
                 type="button"
                 className="btn btn-blank"
-                onClick={ () => seleccionarProyecto(proyecto.id)}
+                onClick={ () => seleccionarProyecto(proyecto._id)}
             >{proyecto.nombre}</button>
         </li> 
     );

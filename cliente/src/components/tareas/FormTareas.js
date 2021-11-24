@@ -17,7 +17,7 @@ const FormTareas = () => {
 
 
     useEffect(() => {
-        console.log(tareaseleccionada)
+
         if(tareaseleccionada !== null){
             guardarTarea(tareaseleccionada)
         }else{
@@ -34,7 +34,7 @@ const FormTareas = () => {
     })
 
     // extraer nombre del state tarea
-    console.log(tarea)
+
     const { nombre } = tarea
 
     if(!proyectoSeleccionado) return null;
@@ -59,8 +59,8 @@ const FormTareas = () => {
 
         if(tareaseleccionada === null){
             // Agregar tarea nueva
-            tarea.id = uuid()
-            tarea.proyectoId = proyectoSeleccionado.id
+
+            tarea.proyecto = proyectoSeleccionado._id
             tarea.estado = false
 
             agregarTarea(tarea)
@@ -76,7 +76,7 @@ const FormTareas = () => {
 
         // Obtener y filtrar las tareas del proyecto actual
 
-        obtenerTareas(proyectoSeleccionado.id)
+        obtenerTareas(proyectoSeleccionado._id)
 
         // reiniciar el formulario
 
